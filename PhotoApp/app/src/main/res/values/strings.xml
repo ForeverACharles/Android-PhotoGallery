@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PhotoApp</string>
+    <string name="menu_rename">Rename</string>
+    <string name="menu_delete">Delete</string>
 </resources>
