@@ -48,44 +48,49 @@ public class MainActivity extends AppCompatActivity {
         displayStuff();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this, "clicked album: "+i+" "+albums.get(i).toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "clicked album: " + i + " " + albums.get(i).toString(), Toast.LENGTH_SHORT).show();
             }
         });
         registerForContextMenu(listView);
 
     }
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId()==R.id.listView) {
+    public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, menuView, menuInfo);
+        if (menuView.getId()==R.id.listView) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_list, menu);
         }
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedAlbum = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
+
         switch(item.getItemId()) {
             case R.id.rename:
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Rename Album");
+                builder.setMessage("Enter new album name for \"" + albums.get(selectedAlbum).toString() + "\" below");
 
-// Set up the input
+                // Set up the input
                 final EditText input = new EditText(this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
                 builder.setView(input);
 
-// Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                // Set up the buttons
+                builder.setPositiveButton("RENAME", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int i = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
-                        albums.get(i).setName(input.getText().toString());
+                        albums.get(selectedAlbum).setName(input.getText().toString());
                         displayStuff();
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -94,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
                 builder.show();
                 return true;
+
             case R.id.delete:
-                int i = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
-                albums.remove(i);
+                albums.remove(selectedAlbum);
                 displayStuff();
                 return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
