@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -74,6 +75,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(PhotoHome.this, "Opening \"" +  albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
+                openAlbum(view);
             }
         });
         registerForContextMenu(listView);
@@ -293,5 +295,9 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
 
         OOS.writeObject(albums);
         OOS.close();
+    }
+    public void openAlbum(View view){
+        Intent intent = new Intent(this, DisplayAlbumActivity.class);
+        startActivity(intent);
     }
 }

@@ -9,7 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PhotoApp">
-        <activity android:name="com.android.photoapp.PhotoHome">
+        <activity android:name=".DisplayAlbumActivity"
+            android:parentActivityName=".PhotoHome">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".PhotoHome" />
+        </activity>
+        <activity android:name=".PhotoHome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
