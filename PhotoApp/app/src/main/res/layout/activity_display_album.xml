@@ -6,9 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".DisplayAlbumActivity">
 
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="178dp"
-        tools:layout_editor_absoluteY="75dp" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="135dp"
+        tools:layout_editor_absoluteY="158dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPhotoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        tools:layout_editor_absoluteX="317dp"
+        tools:layout_editor_absoluteY="648dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
