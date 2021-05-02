@@ -27,12 +27,13 @@ import java.io.*;
 
 public class PhotoHome extends AppCompatActivity implements Serializable {
 
-    Context appContext;
+    public static Context appContext;
 
     ListView listView;
     Button addAlbumButton;
     TextView empty;
-    static ArrayList<Album> albums = new ArrayList<Album>();
+    public static int currentAlbum;
+    public static ArrayList<Album> albums = new ArrayList<Album>();
 
     //ArrayList<String> albumNames;
 
@@ -63,7 +64,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
             {
                 for(Album album : albums)
                 {
-                    albums.remove(album);
+                    //albums.remove(album);
                 }
             }
         }
@@ -75,6 +76,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(PhotoHome.this, "Opening \"" +  albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
+                currentAlbum = i;
                 openAlbum(view);
             }
         });
@@ -263,9 +265,9 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         }
     }
 
-    public static ArrayList<Album> readAlbums(Context appContext) throws IOException, ClassNotFoundException
+    public static ArrayList<Album> readAlbums(Context context) throws IOException, ClassNotFoundException
     {
-        FileInputStream albumFile = appContext.openFileInput("albums");
+        FileInputStream albumFile = context.openFileInput("albums");
         ObjectInputStream OIS = new ObjectInputStream(albumFile);
 
         ArrayList<Album> albumList = (ArrayList<Album>)OIS.readObject();
@@ -273,11 +275,11 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         return albumList;
     }
 
-    public static boolean saveAppState(Context appContext)
+    public static boolean saveAppState(Context context)
     {
         try
         {
-            writeAlbums(appContext);
+            writeAlbums(context);
             Log.d("Loading Album","Albums successfully created");
             return true;
         }
@@ -288,9 +290,9 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         }
     }
 
-    public static void writeAlbums(Context appContext) throws IOException, ClassNotFoundException
+    public static void writeAlbums(Context context) throws IOException, ClassNotFoundException
     {
-        FileOutputStream albumFile = appContext.openFileOutput("albums", Context.MODE_PRIVATE);
+        FileOutputStream albumFile = context.openFileOutput("albums", Context.MODE_PRIVATE);
         ObjectOutputStream OOS = new ObjectOutputStream(albumFile);
 
         OOS.writeObject(albums);

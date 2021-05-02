@@ -1,11 +1,17 @@
 package com.android.photoapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 
 public class Photo implements Serializable {
 
     private String path;
+    private byte[] pic;
     private ArrayList<Tag> tags;
 
     public static final String storeDir = "data";
@@ -14,10 +20,16 @@ public class Photo implements Serializable {
 
     static final long serialVersionUID = 1L;
 
-    public Photo(String path)
+    public Photo(byte[] photo)
     {
-        this.path = path;
+        //this.path = path;
+        this.pic = photo;
         tags = new ArrayList<Tag>();
+    }
+
+    public Bitmap getPhoto() {
+        final Bitmap bitmap = BitmapFactory.decodeByteArray(pic, 0, pic.length);
+        return bitmap;
     }
 
     public String getPath() {
