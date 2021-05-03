@@ -6,14 +6,20 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,7 +43,7 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         addTagButton = (FloatingActionButton)findViewById(R.id.addTagButton);
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
         displayTags();
-        //registerForContextMenu(listView);
+        registerForContextMenu(listView);
 
         //await user interaction with add album button
         addTagButton.setOnClickListener(new View.OnClickListener()
@@ -49,6 +55,30 @@ public class DisplayPhotoActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, menuView, menuInfo);
+        if (menuView.getId() == R.id.tagListView) {
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.tag_options, menu);
+        }
+    }
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedTag= ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
+
+        switch(item.getItemId()) {
+            case R.id.delete :
+                DisplayAlbumActivity.currentPhoto.getTags().remove(selectedTag);
+                PhotoHome.saveAppState(DisplayPhotoActivity.this);
+                displayTags();
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
     protected void displayTags() {
         if(!DisplayAlbumActivity.currentPhoto.getTags().isEmpty()) {
@@ -76,14 +106,20 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(DisplayPhotoActivity.this);
         builder.setTitle("Add Tag");
         builder.setMessage("Select tag attributes below");
-
+        String[] s = {"Person", "Location"};
+        LinearLayout layout = new LinearLayout(DisplayPhotoActivity.this);
+        layout.setOrientation(LinearLayout.VERTICAL);
         // Set up the input
         final EditText input = new EditText(DisplayPhotoActivity.this);
-        input.setPadding(25,0,25,15);
-
-        // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-        builder.setView(input);
+        final Spinner sp = new Spinner(DisplayPhotoActivity.this);
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(DisplayPhotoActivity.this,
+                android.R.layout.simple_spinner_item, s);
+        adp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adp);
+        layout.addView(sp);
+        layout.addView(input);
+        builder.setView(layout);
 
         // Set up the buttons
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -96,14 +132,14 @@ public class DisplayPhotoActivity extends AppCompatActivity {
                     Toast.makeText(DisplayPhotoActivity.this, "Tag name cannot be empty", Toast.LENGTH_LONG).show();
                     addTagDialog(view);
                 }
-                else if (getTag("Person",name) != null)
+                else if (getTag((String)sp.getSelectedItem(),name) != null)
                 {
                     Toast.makeText(DisplayPhotoActivity.this, "\"" + name + "\" already exists", Toast.LENGTH_LONG).show();
                     addTagDialog(view);
                 }
                 else
                 {
-                    DisplayAlbumActivity.currentPhoto.getTags().add(new Tag("Person",name));
+                    DisplayAlbumActivity.currentPhoto.getTags().add(new Tag((String)sp.getSelectedItem(),name));
                     PhotoHome.saveAppState(DisplayPhotoActivity.this);
                     displayTags();
                 }

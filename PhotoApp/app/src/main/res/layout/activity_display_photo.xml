@@ -11,14 +11,14 @@
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ListView
         android:id="@+id/tagListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="350dp"
         android:layout_marginBottom="40dp" />
 
     <Button
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="false"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="260dp"
         android:text="Present" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
