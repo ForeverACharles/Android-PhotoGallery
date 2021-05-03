@@ -58,6 +58,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(DisplayAlbumActivity.this, "Opening " + (i + 1) + "th photo in \"" + currentAlbum + "\"", Toast.LENGTH_SHORT).show();
                 currentPhoto = photos.get(i);
+                openPhoto(view);
             }
         });
         registerForContextMenu(photoGrid);
@@ -143,7 +144,10 @@ public class DisplayAlbumActivity extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
+    public void openPhoto(View view){
+        Intent intent = new Intent(this, DisplayPhotoActivity.class);
+        startActivity(intent);
+    }
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
