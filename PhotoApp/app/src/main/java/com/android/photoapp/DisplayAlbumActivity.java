@@ -15,10 +15,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -89,44 +92,34 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         int selectedPhoto= ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
 
         switch(item.getItemId()) {
-            /*
-            case R.id.rename :
 
-                appContext = this;
-                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
-                builder.setTitle("Album Rename");
-                builder.setMessage("Rename \"" + albums.get(selectedAlbum).toString() + "\" below");
+            case R.id.move :
 
-                // Set up the input
-                final EditText input = new EditText(appContext);
-                input.setPadding(25,0,25,15);
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayAlbumActivity.this);
+                builder.setTitle("Move to Album");
+                builder.setMessage("Choose album to move to below");
+                ArrayAdapter<Album> adp = new ArrayAdapter<Album>(DisplayAlbumActivity.this,
+                        android.R.layout.simple_spinner_item, new ArrayList<Album>());
+                for (Album a:PhotoHome.albums){
+                    if (PhotoHome.albums.indexOf(a) != PhotoHome.currentAlbum){
+                        adp.add(a);
+                    }
+                }
                 // Specify the type of input expected
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-                builder.setView(input);
+                final Spinner sp = new Spinner(DisplayAlbumActivity.this);
+                sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                adp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp.setAdapter(adp);
+                builder.setView(sp);
 
                 // Set up the buttons
-                builder.setPositiveButton("RENAME", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Move", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        String rename = input.getText().toString();
-                        if(rename.equals(""))
-                        {
-                            Toast.makeText(appContext, "Album name cannot be empty", Toast.LENGTH_LONG).show();
-                            onContextItemSelected(item);
-                        }
-                        else if (getAlbum(rename) != null)
-                        {
-                            Toast.makeText(appContext, "\"" + rename + "\" already exists", Toast.LENGTH_LONG).show();
-                            onContextItemSelected(item);
-                        }
-                        else
-                        {
-                            albums.get(selectedAlbum).setName(rename);
-                            saveAppState(appContext);
-                            displayAlbums();
-                        }
+                        adp.getItem(sp.getSelectedItemPosition()).getPhotos().add(photos.get(selectedPhoto));
+                        photos.remove(selectedPhoto);
+                        PhotoHome.saveAppState(DisplayAlbumActivity.this);
+                        displayPhotos();
                     }
                 });
 
@@ -139,7 +132,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
 
                 builder.show();
                 return true;
-            */
+
             case R.id.delete :
                 photos.remove(selectedPhoto);
                 PhotoHome.saveAppState(DisplayAlbumActivity.this);
