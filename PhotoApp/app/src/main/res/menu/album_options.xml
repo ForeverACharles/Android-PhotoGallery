@@ -4,7 +4,7 @@
 
     <item android:id="@+id/rename"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/menu_rename" />
+        android:title="Rename" />
 
     <item android:id="@+id/delete"
         android:icon="@android:drawable/ic_menu_delete"

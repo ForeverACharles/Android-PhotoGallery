@@ -2,7 +2,6 @@ package com.android.photoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,8 +34,6 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
     public static int currentAlbum;
     public static ArrayList<Album> albums = new ArrayList<Album>();
 
-    //ArrayList<String> albumNames;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,21 +56,15 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
             //create album objects from those if not present as serialized
 
             Log.d("Loading Album","Albums does not exist");
-
-            if( !saveAppState(appContext) )
-            {
-                for(Album album : albums)
-                {
-                    //albums.remove(album);
-                }
-            }
+            saveAppState(appContext);
         }
 
         //display albums in ListView
         displayAlbums();
 
         //await user interaction with album list
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(PhotoHome.this, "Opening \"" +  albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
                 currentAlbum = i;
@@ -108,7 +99,6 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                 android.R.layout.simple_list_item_1,
                 albums);
         listView.setAdapter(arrayAdapter);
-
     }
 
     public static Album getAlbum(String albumName)
@@ -191,8 +181,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         if (menuView.getId() == R.id.listView) {
 
             MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.menu_list, menu);
-
+            inflater.inflate(R.menu.album_options, menu);
         }
     }
 

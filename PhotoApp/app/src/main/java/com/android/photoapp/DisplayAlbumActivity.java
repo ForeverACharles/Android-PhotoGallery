@@ -2,44 +2,64 @@ package com.android.photoapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.text.InputType;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.DataOutput;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.*;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
+import java.util.*;
 
 public class DisplayAlbumActivity extends AppCompatActivity {
-    static InputStream tester = null;
+
+    GridView photoGrid;
+    BaseAdapter photoAdapter = null;
     FloatingActionButton addPhotoButton;
-    ImageView imageView;
     static final int WANT_AN_IMAGE = 1;
+
+    ArrayList<Photo> photos;
+    static Photo currentPhoto;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_album);
+
+        Album currentAlbum = PhotoHome.albums.get(PhotoHome.currentAlbum);
+        photos = currentAlbum.getPhotos();
+
+        photoGrid = findViewById(R.id.photoGrid);
+
+        displayPhotos();
+
+        photoGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(DisplayAlbumActivity.this, "Opening " + (i + 1) + "th photo in \"" + currentAlbum + "\"", Toast.LENGTH_SHORT).show();
+                currentPhoto = photos.get(i);
+            }
+        });
+        registerForContextMenu(photoGrid);
+
         addPhotoButton = (FloatingActionButton) findViewById(R.id.addPhotoButton);
-        imageView = findViewById(R.id.imageView2);
-        if(!(PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().isEmpty())) {
-            Bitmap pickedPic = PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().get(0).getPhoto();
-            imageView.setImageBitmap(pickedPic);
-        }
         addPhotoButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -51,22 +71,86 @@ public class DisplayAlbumActivity extends AppCompatActivity {
             }
         });
     }
-    private String getPath(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (Exception e) {
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, menuView, menuInfo);
+        if (menuView.getId() == R.id.photoGrid) {
+
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.photo_options, menu);
         }
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedPhoto= ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
+
+        switch(item.getItemId()) {
+            /*
+            case R.id.rename :
+
+                appContext = this;
+                AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+                builder.setTitle("Album Rename");
+                builder.setMessage("Rename \"" + albums.get(selectedAlbum).toString() + "\" below");
+
+                // Set up the input
+                final EditText input = new EditText(appContext);
+                input.setPadding(25,0,25,15);
+
+                // Specify the type of input expected
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("RENAME", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String rename = input.getText().toString();
+                        if(rename.equals(""))
+                        {
+                            Toast.makeText(appContext, "Album name cannot be empty", Toast.LENGTH_LONG).show();
+                            onContextItemSelected(item);
+                        }
+                        else if (getAlbum(rename) != null)
+                        {
+                            Toast.makeText(appContext, "\"" + rename + "\" already exists", Toast.LENGTH_LONG).show();
+                            onContextItemSelected(item);
+                        }
+                        else
+                        {
+                            albums.get(selectedAlbum).setName(rename);
+                            saveAppState(appContext);
+                            displayAlbums();
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                return true;
+            */
+            case R.id.delete :
+                photos.remove(selectedPhoto);
+                PhotoHome.saveAppState(DisplayAlbumActivity.this);
+                displayPhotos();
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
@@ -74,29 +158,20 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             try {
                 final Uri imageUri = data.getData();
-                //File file = new File(getPath(DisplayAlbumActivity.this, data.getData()));
-
-                //final InputStream imgStream = getContentResolver().openInputStream(Uri.fromFile(new File(imageUri.getPath())));
-                //final InputStream imgStream = getContentResolver().openInputStream(Uri.fromFile(new File(getPath(DisplayAlbumActivity.this, data.getData()))));
-                //InputStream testStream = new FileInputStream(file);
                 final InputStream imgStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap testPic = BitmapFactory.decodeStream(imgStream);
+
                 ByteArrayOutputStream blob = new ByteArrayOutputStream();
                 testPic.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
+
                 byte[] bitmapdata = blob.toByteArray();
                 final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
 
-                if(bitmap==null){
-                    Log.d("Fatalistic Error","didn't work");
-                }
-                //Toast.makeText(DisplayAlbumActivity.this, "Le Result is: "+  imageUri.compareTo(Uri.fromFile(file)), Toast.LENGTH_LONG).show();
-
-                //final Bitmap pickedPic = BitmapFactory.decodeFile(file.getPath());
-
                 PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().add(new Photo(bitmapdata));
+                photos = PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos();
 
                 PhotoHome.saveAppState(DisplayAlbumActivity.this);
-                //imageView.setImageBitmap(bitmap);
+                displayPhotos();
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -107,4 +182,12 @@ public class DisplayAlbumActivity extends AppCompatActivity {
             Toast.makeText(DisplayAlbumActivity.this, "You didn't pick anything",Toast.LENGTH_LONG).show();
         }
     }
+
+    public void displayPhotos()
+    {
+        photoAdapter = new PhotoAdapter(DisplayAlbumActivity.this, photos);
+        photoGrid.setAdapter(photoAdapter);
+    }
+
+
 }

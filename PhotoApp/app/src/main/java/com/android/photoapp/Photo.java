@@ -3,47 +3,26 @@ package com.android.photoapp;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import java.io.DataInputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 
 public class Photo implements Serializable {
 
-    private String path;
-    private byte[] pic;
+    private byte[] photoData;
     private ArrayList<Tag> tags;
 
     public static final String storeDir = "data";
-
     public static final String storeFile = "photos.dat";
-
     static final long serialVersionUID = 1L;
 
-    public Photo(byte[] photo)
+    public Photo(byte[] photoData)
     {
-        //this.path = path;
-        this.pic = photo;
+        this.photoData = photoData;
         tags = new ArrayList<Tag>();
     }
 
-    public Bitmap getPhoto() {
-        final Bitmap bitmap = BitmapFactory.decodeByteArray(pic, 0, pic.length);
-        return bitmap;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path)
-    {
-        this.path = path;
-    }
-
-    public String getCaption()
-    {
-        return path;
+    public Bitmap getBitmap() {
+        return BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
     }
 
     public ArrayList<Tag> getTags()
