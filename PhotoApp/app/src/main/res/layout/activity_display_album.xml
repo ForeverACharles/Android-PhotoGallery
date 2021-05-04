@@ -18,13 +18,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="25dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
         android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:foreground="@mipmap/photo_ladd"
+        app:backgroundTint="#673AB7"
+        app:srcCompat="@mipmap/photo_ladd" />
 
     <GridView
         android:id="@+id/photoGrid"
