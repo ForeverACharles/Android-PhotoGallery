@@ -4,5 +4,6 @@
     <string name="add_album">Add Album</string>
     <string name="menu_rename">Rename</string>
     <string name="menu_delete">Delete</string>
+    <string name="view">View</string>
 
 </resources>

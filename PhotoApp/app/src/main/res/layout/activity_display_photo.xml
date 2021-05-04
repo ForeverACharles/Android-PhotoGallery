@@ -14,13 +14,6 @@
         android:layout_marginTop="40dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <ListView
-        android:id="@+id/tagListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="350dp"
-        android:layout_marginBottom="40dp" />
-
     <Button
         android:id="@+id/PresentButton"
         android:layout_width="wrap_content"
@@ -28,14 +21,49 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="false"
         android:layout_marginTop="260dp"
-        android:text="Present" />
+        android:text="@string/view"
+        android:translationY="-10dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <EditText
+        android:id="@+id/Tags"
+        android:layout_width="369dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="286dp"
+        android:layout_marginEnd="21dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Tags" />
+
+    <Button
         android:id="@+id/addTagButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:text="Add Tag" />
+
+    <ListView
+        android:id="@+id/tagListView"
+        android:layout_width="wrap_content"
+        android:layout_height="404dp"
+        android:layout_below="@+id/Tags"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="-4dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="0dp"
+        android:translationY="0dp" />
+
 </RelativeLayout>

@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.*;
 import java.io.*;
 
@@ -30,9 +32,11 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
 
     ListView listView;
     Button addAlbumButton;
+    FloatingActionButton photoSearchButton;
     TextView empty;
     public static int currentAlbum;
     public static ArrayList<Album> albums = new ArrayList<Album>();
+    public static ArrayList<Photo> searchedPhotos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +45,19 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         appContext = PhotoHome.this;
 
         setContentView(R.layout.photo_home);
-        listView = (ListView)findViewById(R.id.listView);
-        addAlbumButton = (Button)findViewById(R.id.albumAddButton);
+        listView = (ListView) findViewById(R.id.listView);
+        addAlbumButton = (Button) findViewById(R.id.albumAddButton);
+        photoSearchButton = (FloatingActionButton) findViewById(R.id.photoSearchButton);
         empty = findViewById(R.id.empty);
 
         //load up albums from storage
-        try
-        {
+        try {
             albums = readAlbums(appContext);
-            Log.d("Loading Album","Albums successfully loaded");
-        }
-        catch (Exception albumsNotFound)
-        {
+            Log.d("Loading Album", "Albums successfully loaded");
+        } catch (Exception albumsNotFound) {
             //create album objects from those if not present as serialized
 
-            Log.d("Loading Album","Albums does not exist");
+            Log.d("Loading Album", "Albums does not exist");
             saveAppState(appContext);
         }
 
@@ -63,27 +65,31 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         displayAlbums();
 
         //await user interaction with album list
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(PhotoHome.this, "Opening \"" +  albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PhotoHome.this, "Opening \"" + albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
                 currentAlbum = i;
-                openAlbum(view);
+                openAlbum();
             }
         });
         registerForContextMenu(listView);
 
         //await user interaction with add album button
-        addAlbumButton.setOnClickListener(new View.OnClickListener()
-        {
+        addAlbumButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                addAlbumDialog(view);
+            public void onClick(View view) {
+                addAlbumDialog();
+            }
+        });
+
+        //search for Photo
+        photoSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchPhotoDialog(view);
             }
         });
     }
-
     protected void displayAlbums() {
         if(albums.size() == 0)
         {
@@ -123,8 +129,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         });
     }
 
-
-    public void addAlbumDialog(View view)
+    public void addAlbumDialog()
     {
         appContext = PhotoHome.this;
         AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
@@ -148,12 +153,12 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                 if(name.equals(""))
                 {
                     Toast.makeText(appContext, "Album name cannot be empty", Toast.LENGTH_LONG).show();
-                    addAlbumDialog(view);
+                    addAlbumDialog();
                 }
                 else if (getAlbum(name) != null)
                 {
                     Toast.makeText(appContext, "\"" + name + "\" already exists", Toast.LENGTH_LONG).show();
-                    addAlbumDialog(view);
+                    addAlbumDialog();
                 }
                 else
                 {
@@ -173,6 +178,74 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         });
 
         builder.show();
+    }
+
+    public void searchPhotoDialog(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PhotoHome.this);
+        builder.setTitle("Search Photos");
+        builder.setMessage("Enter your search below");
+
+        // Set up the input
+        final EditText input = new EditText(appContext);
+        input.setPadding(25,0,25,15);
+
+        // Specify the type of input expected
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String search = input.getText().toString();
+                if(search.equals(""))
+                {
+                    Toast.makeText(appContext, "Search was empty", Toast.LENGTH_LONG).show();
+                    searchPhotoDialog(view);
+                }
+                else if((searchedPhotos = searchPhotos(search)).isEmpty())
+                {
+                    Toast.makeText(appContext, "No results for \"" + search + "\"", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    //go to next view
+                    Toast.makeText(appContext, "Showing results for \"" + search + "\"" , Toast.LENGTH_LONG).show();
+                    showSearchResults(view);
+                }
+            }
+        });
+
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    public ArrayList<Photo> searchPhotos(String search)
+    {
+        ArrayList<Photo> searchResults = new ArrayList<Photo>();
+        for(Album album : albums)
+        {
+            for(Photo photo : album.getPhotos())
+            {
+                for(Tag tag : photo.getTags())
+                {
+                    if(tag.getValue().toLowerCase().contains(search.toLowerCase())
+                        && !searchResults.contains(photo))
+                        {
+                            searchResults.add(photo);
+                        }
+                }
+            }
+        }
+        return searchResults;
     }
 
     @Override
@@ -287,8 +360,15 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         OOS.writeObject(albums);
         OOS.close();
     }
-    public void openAlbum(View view){
+    public void openAlbum(){
         Intent intent = new Intent(this, DisplayAlbumActivity.class);
         startActivity(intent);
     }
+
+    public void showSearchResults(View view)
+    {
+        Intent intent = new Intent(this, PhotoSearchResults.class);
+        startActivity(intent);
+    }
+
 }

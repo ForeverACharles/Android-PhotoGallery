@@ -7,6 +7,19 @@
     android:layout_height="match_parent"
     tools:context=".PhotoHome">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/photoSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_search" />
+
     <TextView
         android:id="@+id/empty"
         android:layout_width="wrap_content"
@@ -22,17 +35,18 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:text="@string/add_album" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="826dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="-2dp"
+        android:layout_marginTop="2dp"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
         tools:layout_editor_absoluteX="-66dp"

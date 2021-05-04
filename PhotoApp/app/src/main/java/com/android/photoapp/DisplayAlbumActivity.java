@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,9 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -50,17 +47,22 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         photos = currentAlbum.getPhotos();
 
         photoGrid = findViewById(R.id.photoGrid);
-
         displayPhotos();
 
         photoGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(DisplayAlbumActivity.this, "Opening " + (i + 1) + "th photo in \"" + currentAlbum + "\"", Toast.LENGTH_SHORT).show();
+                View photoView = view;
+
+                view.setAlpha((float) 0.5);
+                //view.setBackgroundColor(Color.parseColor("#000000"));
+
                 currentPhoto = photos.get(i);
-                openPhoto(view);
+                openPhoto(photoView);
             }
         });
+
         registerForContextMenu(photoGrid);
 
         addPhotoButton = (FloatingActionButton) findViewById(R.id.addPhotoButton);
@@ -78,6 +80,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
+
         super.onCreateContextMenu(menu, menuView, menuInfo);
         if (menuView.getId() == R.id.photoGrid) {
 
@@ -90,7 +93,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int selectedPhoto= ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
+        int selectedPhoto = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
 
         switch(item.getItemId()) {
 
@@ -148,6 +151,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DisplayPhotoActivity.class);
         startActivity(intent);
     }
+
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
@@ -155,16 +159,16 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             try {
                 final Uri imageUri = data.getData();
-                final InputStream imgStream = getContentResolver().openInputStream(imageUri);
-                final Bitmap testPic = BitmapFactory.decodeStream(imgStream);
+                final InputStream photoStream = getContentResolver().openInputStream(imageUri);
+                final Bitmap photoBitmap = BitmapFactory.decodeStream(photoStream);
 
-                ByteArrayOutputStream blob = new ByteArrayOutputStream();
-                testPic.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
+                ByteArrayOutputStream photoByteStream = new ByteArrayOutputStream();
+                photoBitmap.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, photoByteStream);
+                byte[] bitmapData = photoByteStream.toByteArray();
 
-                byte[] bitmapdata = blob.toByteArray();
-                final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+                //final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
 
-                PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().add(new Photo(bitmapdata));
+                PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().add(new Photo(bitmapData));
                 photos = PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos();
 
                 PhotoHome.saveAppState(DisplayAlbumActivity.this);

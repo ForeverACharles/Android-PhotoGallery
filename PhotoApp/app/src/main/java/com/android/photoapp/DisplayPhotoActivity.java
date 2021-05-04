@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 public class DisplayPhotoActivity extends AppCompatActivity {
 
-    FloatingActionButton addTagButton;
+    Button addTagButton;
     Button presentButton;
     ImageView imageView;
     ListView listView;
@@ -41,7 +42,12 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.tagListView);
         presentButton = (Button)findViewById(R.id.PresentButton);
         imageView = (ImageView)findViewById(R.id.imageView);
-        addTagButton = (FloatingActionButton)findViewById(R.id.addTagButton);
+        addTagButton = (Button)findViewById(R.id.addTagButton);
+
+        if(DisplayAlbumActivity.currentPhoto == null)
+        {
+            DisplayAlbumActivity.currentPhoto = PhotoSearchResults.currentPhoto;
+        }
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
         displayTags();
         registerForContextMenu(listView);
@@ -68,6 +74,7 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SlideshowActivity.class);
         startActivity(intent);
     }
+
     public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, menuView, menuInfo);
         if (menuView.getId() == R.id.tagListView) {
@@ -79,7 +86,7 @@ public class DisplayPhotoActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        int selectedTag= ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
+        int selectedTag = ((AdapterView.AdapterContextMenuInfo)item.getMenuInfo()).position;
 
         switch(item.getItemId()) {
             case R.id.delete :
@@ -93,19 +100,18 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         }
     }
     protected void displayTags() {
-        if(!DisplayAlbumActivity.currentPhoto.getTags().isEmpty()) {
-            ArrayAdapter<Tag> arrayAdapter = new ArrayAdapter(
-                    DisplayPhotoActivity.this,
-                    android.R.layout.simple_list_item_1,
-                    DisplayAlbumActivity.currentPhoto.getTags());
-            listView.setAdapter(arrayAdapter);
-        }
+        ArrayAdapter<Tag> arrayAdapter = new ArrayAdapter(
+                DisplayPhotoActivity.this,
+                android.R.layout.simple_list_item_1,
+                DisplayAlbumActivity.currentPhoto.getTags());
+        listView.setAdapter(arrayAdapter);
     }
+
     public static Tag getTag(String tag, String value)
     {
         for(Tag t : DisplayAlbumActivity.currentPhoto.getTags())
         {
-            if(t.getTag().equals(tag)&&t.getValue().equals(value))
+            if(t.getTag().equals(tag) && t.getValue().equals(value))
             {
                 return t;
             }
@@ -144,7 +150,7 @@ public class DisplayPhotoActivity extends AppCompatActivity {
                     Toast.makeText(DisplayPhotoActivity.this, "Tag name cannot be empty", Toast.LENGTH_LONG).show();
                     addTagDialog(view);
                 }
-                else if (getTag((String)sp.getSelectedItem(),name) != null)
+                else if (getTag((String)sp.getSelectedItem(), name) != null)
                 {
                     Toast.makeText(DisplayPhotoActivity.this, "\"" + name + "\" already exists", Toast.LENGTH_LONG).show();
                     addTagDialog(view);
