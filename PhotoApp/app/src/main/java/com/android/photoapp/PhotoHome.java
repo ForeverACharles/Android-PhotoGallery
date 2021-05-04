@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -34,9 +36,9 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
     Button addAlbumButton;
     FloatingActionButton photoSearchButton;
     TextView empty;
-    public static int currentAlbum;
+    public static Album currentAlbum;
     public static ArrayList<Album> albums = new ArrayList<Album>();
-    public static ArrayList<Photo> searchedPhotos;
+    public static Album searchedPhotos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(PhotoHome.this, "Opening \"" + albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
-                currentAlbum = i;
+                currentAlbum = albums.get(i);
                 openAlbum();
             }
         });
@@ -185,14 +187,23 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         AlertDialog.Builder builder = new AlertDialog.Builder(PhotoHome.this);
         builder.setTitle("Search Photos");
         builder.setMessage("Enter your search below");
-
+        String[] s = {"Person", "Location"};
+        LinearLayout layout = new LinearLayout(PhotoHome.this);
+        layout.setOrientation(LinearLayout.VERTICAL);
         // Set up the input
         final EditText input = new EditText(appContext);
-        input.setPadding(25,0,25,15);
-
         // Specify the type of input expected
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
-        builder.setView(input);
+        final Spinner sp = new Spinner(PhotoHome.this);
+        final ArrayAdapter<String> adp = new ArrayAdapter<String>(PhotoHome.this,
+                android.R.layout.simple_spinner_item, s);
+        adp.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adp);
+
+
+        layout.addView(sp);
+        layout.addView(input);
+        builder.setView(layout);
 
         // Set up the buttons
         builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
@@ -205,7 +216,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                     Toast.makeText(appContext, "Search was empty", Toast.LENGTH_LONG).show();
                     searchPhotoDialog(view);
                 }
-                else if((searchedPhotos = searchPhotos(search)).isEmpty())
+                else if((searchedPhotos = searchPhotos((String)sp.getSelectedItem(),search)).getPhotos().isEmpty())
                 {
                     Toast.makeText(appContext, "No results for \"" + search + "\"", Toast.LENGTH_LONG).show();
                 }
@@ -213,6 +224,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                 {
                     //go to next view
                     Toast.makeText(appContext, "Showing results for \"" + search + "\"" , Toast.LENGTH_LONG).show();
+                    currentAlbum = searchedPhotos;
                     showSearchResults(view);
                 }
             }
@@ -228,19 +240,18 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         builder.show();
     }
 
-    public ArrayList<Photo> searchPhotos(String search)
+    public Album searchPhotos(String type, String search)
     {
-        ArrayList<Photo> searchResults = new ArrayList<Photo>();
+        Album searchResults = new Album("searchResults");
         for(Album album : albums)
         {
             for(Photo photo : album.getPhotos())
             {
                 for(Tag tag : photo.getTags())
                 {
-                    if(tag.getValue().toLowerCase().contains(search.toLowerCase())
-                        && !searchResults.contains(photo))
+                    if(type.equals(tag.getTag())&&tag.getValue().toLowerCase().startsWith(search.toLowerCase()))
                         {
-                            searchResults.add(photo);
+                            searchResults.getPhotos().add(photo);
                         }
                 }
             }

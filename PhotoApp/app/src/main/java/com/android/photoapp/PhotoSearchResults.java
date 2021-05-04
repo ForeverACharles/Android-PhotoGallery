@@ -25,8 +25,8 @@ public class PhotoSearchResults extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results_display);
-
-        photos = PhotoHome.searchedPhotos;
+        setTitle("Search Results");
+        photos = PhotoHome.currentAlbum.getPhotos();
 
         photoGrid = findViewById(R.id.photoSearchGrid);
         displayPhotos();

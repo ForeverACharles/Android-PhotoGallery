@@ -43,7 +43,7 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         presentButton = (Button)findViewById(R.id.PresentButton);
         imageView = (ImageView)findViewById(R.id.imageView);
         addTagButton = (Button)findViewById(R.id.addTagButton);
-
+        setTitle("Photo Display");
         if(PhotoSearchResults.currentPhoto != null)
         {
             DisplayAlbumActivity.currentPhoto = PhotoSearchResults.currentPhoto;

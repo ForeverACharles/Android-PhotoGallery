@@ -43,8 +43,9 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_album);
 
-        Album currentAlbum = PhotoHome.albums.get(PhotoHome.currentAlbum);
+        Album currentAlbum = PhotoHome.currentAlbum;
         photos = currentAlbum.getPhotos();
+        setTitle(currentAlbum.toString());
 
         photoGrid = findViewById(R.id.photoGrid);
         displayPhotos();
@@ -105,7 +106,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
                 ArrayAdapter<Album> adp = new ArrayAdapter<Album>(DisplayAlbumActivity.this,
                         android.R.layout.simple_spinner_item, new ArrayList<Album>());
                 for (Album a:PhotoHome.albums){
-                    if (PhotoHome.albums.indexOf(a) != PhotoHome.currentAlbum){
+                    if (a != PhotoHome.currentAlbum){
                         adp.add(a);
                     }
                 }
@@ -168,8 +169,8 @@ public class DisplayAlbumActivity extends AppCompatActivity {
 
                 //final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
 
-                PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().add(new Photo(bitmapData));
-                photos = PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos();
+                PhotoHome.currentAlbum.getPhotos().add(new Photo(bitmapData));
+                photos = PhotoHome.currentAlbum.getPhotos();
 
                 PhotoHome.saveAppState(DisplayAlbumActivity.this);
                 displayPhotos();

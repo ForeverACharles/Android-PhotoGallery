@@ -19,23 +19,24 @@ public class SlideshowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
+        setTitle("Slideshow");
         backButton = (Button)findViewById(R.id.back);
         forwardButton = (Button)findViewById(R.id.forward);
         imageView = (ImageView)findViewById(R.id.slideView);
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
-        i = PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().indexOf(DisplayAlbumActivity.currentPhoto);
+        i = PhotoHome.currentAlbum.getPhotos().indexOf(DisplayAlbumActivity.currentPhoto);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 i = Math.max(0,i-1);
-                imageView.setImageBitmap(PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().get(i).getBitmap());
+                imageView.setImageBitmap(PhotoHome.currentAlbum.getPhotos().get(i).getBitmap());
             }
         });
         forwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                i = Math.min(PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().size()-1, i+1);
-                imageView.setImageBitmap(PhotoHome.albums.get(PhotoHome.currentAlbum).getPhotos().get(i).getBitmap());
+                i = Math.min(PhotoHome.currentAlbum.getPhotos().size()-1, i+1);
+                imageView.setImageBitmap(PhotoHome.currentAlbum.getPhotos().get(i).getBitmap());
             }
         });
     }
