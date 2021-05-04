@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.photoapp">
+    package="com.android.photoapp" >
 
     <application
         android:allowBackup="true"
@@ -8,9 +8,18 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PhotoApp">
-        <activity android:name=".DisplayPhotoActivity"
-            android:parentActivityName=".DisplayAlbumActivity">
+        android:theme="@style/Theme.PhotoApp" >
+        <activity android:name=".SlideshowActivity"
+            android:parentActivityName=".DisplayPhotoActivity" >
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".DisplayPhotoActivity" />
+        </activity>
+        <activity
+            android:name=".DisplayPhotoActivity"
+            android:parentActivityName=".DisplayAlbumActivity" >
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
@@ -19,14 +28,14 @@
         </activity>
         <activity
             android:name=".DisplayAlbumActivity"
-            android:parentActivityName=".PhotoHome">
+            android:parentActivityName=".PhotoHome" >
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PhotoHome" />
         </activity>
-        <activity android:name=".PhotoHome">
+        <activity android:name=".PhotoHome" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

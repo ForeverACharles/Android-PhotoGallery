@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.ContextMenu;
@@ -44,7 +45,14 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
         displayTags();
         registerForContextMenu(listView);
-
+        presentButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                presentPhoto(view);
+            }
+        });
         //await user interaction with add album button
         addTagButton.setOnClickListener(new View.OnClickListener()
         {
@@ -55,6 +63,10 @@ public class DisplayPhotoActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void presentPhoto(View view){
+        Intent intent = new Intent(this, SlideshowActivity.class);
+        startActivity(intent);
     }
     public void onCreateContextMenu(ContextMenu menu, View menuView, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, menuView, menuInfo);
