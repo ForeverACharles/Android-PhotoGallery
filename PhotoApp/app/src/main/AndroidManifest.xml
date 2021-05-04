@@ -35,15 +35,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".PhotoHome" />
         </activity>
-        <activity
-            android:name=".PhotoSearchResults"
-            android:parentActivityName=".PhotoHome" >
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PhotoHome" />
-        </activity>
         <activity android:name=".PhotoHome" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

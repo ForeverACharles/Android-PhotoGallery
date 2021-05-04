@@ -378,10 +378,4 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
         startActivity(intent);
     }
 
-    public void showSearchResults(View view)
-    {
-        Intent intent = new Intent(this, PhotoSearchResults.class);
-        startActivity(intent);
-    }
-
 }

@@ -44,11 +44,6 @@ public class DisplayPhotoActivity extends AppCompatActivity {
         imageView = (ImageView)findViewById(R.id.imageView);
         addTagButton = (Button)findViewById(R.id.addTagButton);
         setTitle("Photo Display");
-        if(PhotoSearchResults.currentPhoto != null)
-        {
-            DisplayAlbumActivity.currentPhoto = PhotoSearchResults.currentPhoto;
-            PhotoSearchResults.currentPhoto = null;
-        }
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
         displayTags();
         registerForContextMenu(listView);
