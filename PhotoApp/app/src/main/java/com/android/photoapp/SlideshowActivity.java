@@ -19,17 +19,18 @@ public class SlideshowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
-        setTitle("Slideshow");
         backButton = (Button)findViewById(R.id.back);
         forwardButton = (Button)findViewById(R.id.forward);
         imageView = (ImageView)findViewById(R.id.slideView);
         imageView.setImageBitmap(DisplayAlbumActivity.currentPhoto.getBitmap());
         i = PhotoHome.currentAlbum.getPhotos().indexOf(DisplayAlbumActivity.currentPhoto);
+        setTitle("Slideshow: " + (i+1) + "/" + PhotoHome.currentAlbum.getPhotos().size());
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 i = Math.max(0,i-1);
                 imageView.setImageBitmap(PhotoHome.currentAlbum.getPhotos().get(i).getBitmap());
+                setTitle("Slideshow: " + (i+1) + "/" + PhotoHome.currentAlbum.getPhotos().size());
             }
         });
         forwardButton.setOnClickListener(new View.OnClickListener() {
@@ -37,6 +38,7 @@ public class SlideshowActivity extends AppCompatActivity {
             public void onClick(View v) {
                 i = Math.min(PhotoHome.currentAlbum.getPhotos().size()-1, i+1);
                 imageView.setImageBitmap(PhotoHome.currentAlbum.getPhotos().get(i).getBitmap());
+                setTitle("Slideshow: " + (i+1) + "/" + PhotoHome.currentAlbum.getPhotos().size());
             }
         });
     }
