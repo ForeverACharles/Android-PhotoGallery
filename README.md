@@ -1,29 +1,12 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Photo App created by Charles Li & Max Sun
 
-### What is this repository for? ###
+### Features ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* Creating your own photo albums
+* Storing photos in your albums
+* Tagging your photos by people and location
+* Searching your photos by tags
+* Edit, Deleting, Moving Photos
+* Adding & Removing Photo tags
