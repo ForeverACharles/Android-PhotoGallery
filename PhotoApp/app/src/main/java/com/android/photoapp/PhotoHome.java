@@ -39,13 +39,13 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
     public static Album currentAlbum;
     public static ArrayList<Album> albums = new ArrayList<Album>();
     public static Album searchedPhotos;
+    public static boolean Search = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         appContext = PhotoHome.this;
-
         setContentView(R.layout.photo_home);
         listView = (ListView) findViewById(R.id.listView);
         addAlbumButton = (Button) findViewById(R.id.albumAddButton);
@@ -71,6 +71,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(PhotoHome.this, "Opening \"" + albums.get(i).toString() + "\"", Toast.LENGTH_SHORT).show();
                 currentAlbum = albums.get(i);
+                Search = false;
                 openAlbum();
             }
         });
@@ -225,7 +226,8 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                     //go to next view
                     Toast.makeText(appContext, "Showing results for \"" + search + "\"" , Toast.LENGTH_LONG).show();
                     currentAlbum = searchedPhotos;
-                    showSearchResults(view);
+                    Search = true;
+                    openAlbum();
                 }
             }
         });
@@ -242,7 +244,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
 
     public Album searchPhotos(String type, String search)
     {
-        Album searchResults = new Album("searchResults");
+        Album searchResults = new Album("Search Results");
         for(Album album : albums)
         {
             for(Photo photo : album.getPhotos())

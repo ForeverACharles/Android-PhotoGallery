@@ -63,20 +63,20 @@ public class DisplayAlbumActivity extends AppCompatActivity {
                 openPhoto(photoView);
             }
         });
-
-        registerForContextMenu(photoGrid);
-
         addPhotoButton = (FloatingActionButton) findViewById(R.id.addPhotoButton);
-        addPhotoButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent pIntent = new Intent(Intent.ACTION_PICK);
-                pIntent.setType("image/*");
-                startActivityForResult(pIntent, WANT_AN_IMAGE);
-            }
-        });
+        addPhotoButton.setVisibility(View.INVISIBLE);
+        if(!PhotoHome.Search) {
+            registerForContextMenu(photoGrid);
+            addPhotoButton.setVisibility(View.VISIBLE);
+            addPhotoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent pIntent = new Intent(Intent.ACTION_PICK);
+                    pIntent.setType("image/*");
+                    startActivityForResult(pIntent, WANT_AN_IMAGE);
+                }
+            });
+        }
     }
 
     @Override
