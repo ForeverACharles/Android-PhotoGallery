@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,6 +37,7 @@ public class DisplayAlbumActivity extends AppCompatActivity {
 
     ArrayList<Photo> photos;
     static Photo currentPhoto;
+    TextView empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +50,12 @@ public class DisplayAlbumActivity extends AppCompatActivity {
         setTitle(currentAlbum.toString());
 
         photoGrid = findViewById(R.id.photoGrid);
+        empty = findViewById(R.id.empty2);
         displayPhotos();
 
         photoGrid.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(DisplayAlbumActivity.this, "Opening " + (i + 1) + "th photo in \"" + currentAlbum + "\"", Toast.LENGTH_SHORT).show();
                 View photoView = view;
 
                 view.setAlpha((float) 0.5);
@@ -189,6 +191,14 @@ public class DisplayAlbumActivity extends AppCompatActivity {
     {
         photoAdapter = new PhotoAdapter(DisplayAlbumActivity.this, photos);
         photoGrid.setAdapter(photoAdapter);
+        if(photos.size() == 0)
+        {
+            empty.setText("Looks like you have no photos in this album");
+        }
+        else
+        {
+            empty.setText(null);
+        }
     }
 
 

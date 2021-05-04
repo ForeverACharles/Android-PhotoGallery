@@ -254,6 +254,7 @@ public class PhotoHome extends AppCompatActivity implements Serializable {
                     if(type.equals(tag.getTag())&&tag.getValue().toLowerCase().startsWith(search.toLowerCase()))
                         {
                             searchResults.getPhotos().add(photo);
+                            break;
                         }
                 }
             }

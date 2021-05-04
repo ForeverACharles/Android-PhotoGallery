@@ -24,20 +24,27 @@
         android:text="@string/view"
         android:translationY="-10dp" />
 
-    <EditText
-        android:id="@+id/Tags"
-        android:layout_width="369dp"
+    <TextView
+        android:id="@+id/tagsText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="304dp"
+        android:text="Tags"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <ImageView
+        android:id="@+id/TagBar"
+        android:layout_width="355dp"
+        android:layout_height="9dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="286dp"
-        android:layout_marginEnd="21dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Tags" />
+        android:layout_marginTop="327dp"
+        android:scaleX="6.5"
+        android:scaleY=".2"
+        app:srcCompat="@android:drawable/bottom_bar" />
 
     <Button
         android:id="@+id/addTagButton"
@@ -54,16 +61,16 @@
     <ListView
         android:id="@+id/tagListView"
         android:layout_width="wrap_content"
-        android:layout_height="404dp"
-        android:layout_below="@+id/Tags"
+        android:layout_height="373dp"
+        android:layout_below="@id/TagBar"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="17dp"
         android:layout_marginTop="-4dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="1dp"
         android:translationY="0dp" />
 
 </RelativeLayout>
