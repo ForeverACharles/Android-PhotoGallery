@@ -1,6 +1,9 @@
-# README #
+# Android Photo Gallery App
 
-Photo App created by Charles Li & Max Sun
+Photo App created by Charles Li & Max Sun. Original Repo hosted on [BitBucket](https://cl1217@bitbucket.org/cl1217/android-55.git) and pushed to GitHub on 5/10/22
+
+Build in Android Studio and written in Java.
+
 
 |     In-action      | Features                        |
 ---------------------|----------------------------------| 
