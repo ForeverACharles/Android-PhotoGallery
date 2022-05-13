@@ -4,6 +4,8 @@ Photo App created by Charles Li & Max Sun. Original Repo hosted on [BitBucket](h
 
 Built in Android Studio and written in Java.
 
+This application was built with the goal of achieving feature parity with our original JavaFX implementaion found [here](https://github.com/ForeverACharles/PhotoGallary-App)
+
 ## Usage
 
 Import project contents into Android Studio and run application on Android emulator
