@@ -2,7 +2,11 @@
 
 Photo App created by Charles Li & Max Sun. Original Repo hosted on [BitBucket](https://cl1217@bitbucket.org/cl1217/android-55.git) and pushed to GitHub on 5/10/22
 
-Build in Android Studio and written in Java.
+Built in Android Studio and written in Java.
+
+## Usage
+
+Import project contents into Android Studio and run application on Android emulator
 
 
 |     In-action      | Features                        |
